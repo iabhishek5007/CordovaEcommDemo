@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' https://dummyjson.com data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content: https://dummyjson.com https://cdn.dummyjson.com;"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, width=device-width, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <title>Cordova E-Commerce</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="stylesheet" href="css/components.css" />
+  </head>
+  <body>
+    <!-- App Container -->
+    <div id="app-container">
+      <!-- Content will be dynamically loaded here -->
+    </div>
+
+    <!-- Loader -->
+    <div id="loader" class="hidden">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Templates -->
+
+    <!-- Login Template -->
+    <script type="text/template" id="login-template">
+      <div class="login-container">
+          <h1><%= APP_STRINGS.LOGIN_TITLE %></h1>
+          <div class="form-group">
+              <label for="username"><%= APP_STRINGS.USERNAME_LABEL %></label>
+              <input type="text" id="username" placeholder="<%= APP_STRINGS.USERNAME_PLACEHOLDER %>">
+          </div>
+          <div class="form-group">
+              <label for="password"><%= APP_STRINGS.PASSWORD_LABEL %></label>
+              <input type="password" id="password" placeholder="<%= APP_STRINGS.PASSWORD_PLACEHOLDER %>">
+          </div>
+          <div class="error-message hidden"></div>
+          <button id="login-btn" class="btn-primary"><%= APP_STRINGS.LOGIN_BUTTON %></button>
+      </div>
+    </script>
+
+    <!-- Product List Template -->
+    <script type="text/template" id="product-list-template">
+      <div class="product-container">
+          <div class="welcome-banner">
+              <h2><%= APP_STRINGS.WELCOME_MESSAGE %> <%= username %></h2>
+          </div>
+          <h1><%= APP_STRINGS.PRODUCTS_TITLE %></h1>
+          <div class="product-grid">
+              <% _.each(products, function(product) { %>
+                  <div class="product-card">
+                      <div class="product-image">
+                          <img src="<%= product.thumbnail %>" alt="<%= product.title %>">
+                      </div>
+                      <div class="product-info">
+                          <h3><%= product.title %></h3>
+                          <p class="product-description"><%= product.description.substring(0, 100) %>...</p>
+                          <div class="product-meta">
+                              <span class="product-price">$<%= product.price %></span>
+                              <span class="product-rating">★ <%= product.rating %></span>
+                          </div>
+                          <div class="product-stock <%= product.stock < 10 ? 'low-stock' : '' %>">
+                              <%= product.stock < 10 ? APP_STRINGS.LOW_STOCK : APP_STRINGS.IN_STOCK %>
+                          </div>
+                      </div>
+                  </div>
+              <% }); %>
+          </div>
+      </div>
+    </script>
+
+    <!-- Libraries -->
+    <script src="cordova.js"></script>
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/lib/underscore-min.js"></script>
+    <script src="js/lib/backbone-min.js"></script>
+
+    <!-- App Namespace Initializer -->
+    <script src="js/init-app.js"></script>
+
+    <!-- Constants -->
+    <script src="js/constants/strings.js"></script>
+    <script src="js/constants/config.js"></script>
+
+    <!-- Utilities -->
+    <script src="js/utils/ajax-utils.js"></script>
+    <script src="js/utils/storage-utils.js"></script>
+    <script src="js/utils/ui-utils.js"></script>
+
+    <!-- Models -->
+    <script src="js/models/user-model.js"></script>
+    <script src="js/models/product-model.js"></script>
+
+    <!-- Views -->
+    <script src="js/views/login-view.js"></script>
+    <script src="js/views/product-view.js"></script>
+
+    <!-- Controllers -->
+    <script src="js/controllers/auth-controller.js"></script>
+    <script src="js/controllers/product-controller.js"></script>
+
+    <!-- Router -->
+    <script src="js/router.js"></script>
+
+    <!-- Main App -->
+    <script src="js/app.js"></script>
+  </body>
+</html>
