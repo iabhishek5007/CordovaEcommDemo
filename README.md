@@ -8,6 +8,8 @@ A cross-platform e-commerce mobile application built with Apache Cordova, Backbo
 - Modular MVC structure with Backbone.js
 - Responsive UI (mobile-first)
 - Easily extensible for new features (products, cart, etc.)
+- Shopping cart functionality (add/remove products, view cart, update quantities)
+- Address and checkout flow (enter shipping address, proceed to payment)
 
 ## Technology Stack
 - [Apache Cordova](https://cordova.apache.org/): Cross-platform mobile development
@@ -145,6 +147,14 @@ Built and maintained with passion for modular, scalable, and beginner-friendly m
 2. `product-controller.js` creates `ProductView` and fetches products.
 3. Products are fetched via AJAX and rendered in `product-view.js`.
 4. Welcome message uses username from stored user info.
+
+### Example: Cart and Address Flow
+1. User adds products to the cart from the product list (`product-view.js`).
+2. The cart icon in the header updates to reflect the number of items in the cart.
+3. User navigates to the cart view (`cartController.showCartView()`), where they can review, update, or remove items.
+4. Proceeding from the cart, the user is taken to the address view (`cartController.showAddressView()`), where they enter shipping details.
+5. The app validates the address and allows the user to proceed to payment (or displays a confirmation message).
+6. Cart and address data are managed using Backbone models and collections, with persistent storage for session continuity.
 
 This sequence helps you trace the flow from user action to code execution, making it easier to understand and debug the project.
 
