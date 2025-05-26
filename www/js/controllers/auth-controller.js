@@ -17,7 +17,7 @@ App.Controllers.AuthController = Backbone.View.extend({
     this.userModel = new App.Models.User();
 
     // Load user data from storage if available
-    var storedUser = StorageUtils.getUserInfo();
+    var storedUser = App.Utils.Storage.getUserInfo(); // Corrected to use App.Utils.Storage
     if (storedUser) {
       this.userModel.set(storedUser);
     }
@@ -27,6 +27,11 @@ App.Controllers.AuthController = Backbone.View.extend({
    * Show the login view
    */
   showLoginView: function () {
+    // Remove previous view instance if exists
+    if (this.loginView) {
+      this.loginView.remove();
+    }
+
     // Create login view
     this.loginView = new App.Views.LoginView({
       onLogin: this.handleLogin.bind(this),

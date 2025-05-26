@@ -24,42 +24,59 @@ App.Controllers.ProductController = Backbone.View.extend({
     var self = this;
 
     // Get user info from auth controller
-    var userInfo = StorageUtils.getUserInfo();
+    var userInfo = App.Utils.Storage.getUserInfo(); // Corrected to use App.Utils.Storage
 
-    // Create products view
+    // Remove previous view instance if exists
+    if (this.productsView) {
+      this.productsView.remove();
+    }
+
+    // Create products view but defer rendering until products are fetched
     this.productsView = new App.Views.ProductView({
       collection: this.productsCollection,
       userInfo: userInfo,
+      // Pass a flag or change initialization to prevent immediate render
     });
 
-    // Fetch products from API
-    this.fetchProducts();
+    // Fetch products from API and then render the view
+    this.fetchProductsAndRenderView();
   },
 
   /**
    * Fetch products from API
    */
-  fetchProducts: function () {
+  fetchProductsAndRenderView: function () { // Renamed and modified
     var self = this;
 
     // Show loader while fetching
-    UIUtils.showLoader();
+    App.Utils.UI.showLoader(); // Assuming UIUtils is App.Utils.UI
 
     // Fetch products
     this.productsCollection.fetchProducts(
       // Success callback
       function (response) {
-        UIUtils.hideLoader();
+        App.Utils.UI.hideLoader();
+
+        // Now that products are fetched (or attempted), render the view
+        if (self.productsView) {
+            console.log("Products fetched, rendering ProductView.");
+            self.productsView.render(); // Explicitly call render
+        }
 
         // If no products found
         if (self.productsCollection.length === 0) {
-          UIUtils.showToast(APP_STRINGS.NO_PRODUCTS, "info");
+          App.Utils.UI.showToast(APP_STRINGS.NO_PRODUCTS, "info");
         }
       },
       // Error callback
       function (errorMessage) {
-        UIUtils.hideLoader();
-        UIUtils.showToast(errorMessage, "error");
+        App.Utils.UI.hideLoader();
+        App.Utils.UI.showToast(errorMessage, "error");
+        // Optionally render the view even on error to show an empty state or error message within the view
+        if (self.productsView) {
+            console.log("Error fetching products, rendering ProductView with potentially empty collection.");
+            self.productsView.render(); 
+        }
       }
     );
   },

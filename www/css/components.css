@@ -59,3 +59,225 @@ textarea {
     font-size: 1rem;
     color: #555;
 }
+
+/* Header Cart Icon */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa; /* Light grey background for header */
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 20px;
+}
+
+.app-header h1, .app-header h2 {
+    margin: 0;
+}
+
+.cart-icon-container {
+    position: relative;
+}
+
+.cart-icon-container a {
+    text-decoration: none;
+    color: #333;
+}
+
+.cart-icon-container img {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+.cart-icon-container .cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    min-width: 18px; /* Ensure circle shape for single digit */
+    text-align: center;
+}
+
+/* Product Card Add to Cart Button */
+.product-card .btn-add-to-cart {
+    display: block;
+    width: calc(100% - 20px); /* Adjust width considering padding */
+    margin: 10px auto 0;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    background-color: #28a745; /* Green for add to cart */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.product-card .btn-add-to-cart:hover {
+    background-color: #218838;
+}
+
+/* Cart Page Styles */
+.cart-container, .address-container {
+    padding: 15px;
+}
+
+.cart-items-list .cart-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 15px;
+    border-radius: 4px;
+}
+
+.cart-item-details {
+    flex-grow: 1;
+}
+
+.cart-item-details h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+}
+
+.cart-item-price {
+    color: #555;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+}
+
+.cart-item-quantity .btn-quantity {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    color: #495057;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.cart-item-quantity .item-quantity-input {
+    width: 40px;
+    text-align: center;
+    margin: 0 5px;
+    padding: 5px;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+}
+
+.cart-item-subtotal {
+    text-align: right;
+    min-width: 100px; /* Ensure enough space for price and button */
+}
+
+.cart-item-subtotal p {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+}
+
+.cart-item-subtotal .btn-remove {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.cart-item-subtotal .btn-remove:hover {
+    background-color: #c82333;
+}
+
+.cart-summary {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+}
+
+.cart-summary h3 {
+    text-align: left;
+}
+
+.cart-summary p {
+    font-size: 1.1rem;
+    margin: 5px 0;
+}
+
+.cart-summary .btn-checkout {
+    margin-top: 15px;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+}
+
+.empty-cart-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #777;
+    margin: 30px 0;
+}
+
+/* Address Form Styles */
+#address-form .form-group {
+    margin-bottom: 15px;
+}
+
+#address-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#address-form input[type="text"],
+#address-form input[type="tel"] {
+    /* Inherits general input styles, can add specifics here */
+}
+
+.payment-options label {
+    display: inline-block;
+    margin-right: 20px;
+    font-weight: normal;
+}
+
+.payment-options input[type="radio"] {
+    margin-right: 5px;
+}
+
+.order-summary-preview {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.order-summary-preview h4 {
+    margin-top: 0;
+}
+
+#submit-order {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+}

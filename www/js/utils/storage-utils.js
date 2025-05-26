@@ -54,7 +54,7 @@ var StorageUtils = {
   },
 
   /**
-   * Clear all application data from local storage
+   * Remove all data from local storage
    */
   clearAll: function () {
     try {
@@ -66,32 +66,95 @@ var StorageUtils = {
     }
   },
 
+  // --- User Specific Storage --- //
+
   /**
-   * Save user information to local storage
-   * @param {Object} userInfo - User information object
+   * Save user information (e.g., after login)
+   * @param {Object} userInfo - User object to store
    */
   saveUserInfo: function (userInfo) {
-    this.save(APP_CONFIG.STORAGE.USER_INFO, userInfo);
-
-    // Save auth token separately for easier access
-    if (userInfo && userInfo.accessToken) {
-      this.save(APP_CONFIG.STORAGE.AUTH_TOKEN, userInfo.accessToken);
-    }
+    return this.save(App.Config.STORAGE_KEYS.USER_INFO, userInfo);
   },
 
   /**
-   * Get user information from local storage
-   * @returns {Object|null} User information or null if not found
+   * Get user information
+   * @returns {Object|null} User object or null if not found
    */
   getUserInfo: function () {
-    return this.get(APP_CONFIG.STORAGE.USER_INFO, null);
+    return this.get(App.Config.STORAGE_KEYS.USER_INFO, null);
   },
 
   /**
-   * Clear user session data (logout)
+   * Remove user information (e.g., after logout)
    */
-  clearUserSession: function () {
-    this.remove(APP_CONFIG.STORAGE.USER_INFO);
-    this.remove(APP_CONFIG.STORAGE.AUTH_TOKEN);
+  removeUserInfo: function () {
+    return this.remove(App.Config.STORAGE_KEYS.USER_INFO);
+  },
+
+  /**
+   * Save authentication token
+   * @param {string} token - Authentication token
+   */
+  saveAuthToken: function (token) {
+    return this.save(App.Config.STORAGE_KEYS.AUTH_TOKEN, token);
+  },
+
+  /**
+   * Get authentication token
+   * @returns {string|null} Authentication token or null if not found
+   */
+  getAuthToken: function () {
+    return this.get(App.Config.STORAGE_KEYS.AUTH_TOKEN, null);
+  },
+
+  /**
+   * Remove authentication token
+   */
+  removeAuthToken: function () {
+    return this.remove(App.Config.STORAGE_KEYS.AUTH_TOKEN);
+  },
+
+  // --- Cart Specific Storage --- //
+
+  /**
+   * Save cart data
+   * @param {Object} cartData - Cart object to store (e.g., { items: [...] })
+   */
+  saveCartData: function (cartData) {
+    console.log("StorageUtils: Saving cart data:", cartData);
+    if (!cartData || !cartData.items || !Array.isArray(cartData.items)) {
+      console.error(
+        "StorageUtils: Invalid cart data format, fixing before save"
+      );
+      cartData = { items: [] };
+    }
+    return this.save(App.Config.STORAGE_KEYS.CART_DATA, cartData);
+  },
+
+  /**
+   * Get cart data
+   * @returns {Object|null} Cart object or null if not found
+   */
+  getCartData: function () {
+    console.log("StorageUtils: Getting cart data");
+    var cartData = this.get(App.Config.STORAGE_KEYS.CART_DATA, { items: [] });
+
+    // Validate cart data structure
+    if (!cartData || !cartData.items || !Array.isArray(cartData.items)) {
+      console.error(
+        "StorageUtils: Invalid cart data retrieved, returning empty cart"
+      );
+      return { items: [] };
+    }
+
+    console.log("StorageUtils: Retrieved cart data:", cartData);
+    return cartData;
+  },
+
+  /**
+   * Remove cart data
+   */
+  removeCartData: function () {
+    return this.remove(App.Config.STORAGE_KEYS.CART_DATA);
   },
 };

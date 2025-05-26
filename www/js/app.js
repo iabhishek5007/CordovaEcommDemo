@@ -3,88 +3,89 @@
  * Initializes the Backbone application and sets up routing
  */
 
-// App namespace is initialized by init-app.js
-// var App = App || {
-//   Models: {},
-//   Collections: {},
-//   Views: {},
-//   Routers: {},
-//   Controllers: {},
-//   Utils: {},
-//   Config: {},
-//   Templates: {},
-// };
-
-// Main Application Router
+// App Router (Clean + Fallback + Cordova ready)
 App.Routers.MainRouter = Backbone.Router.extend({
   routes: {
+    "": "defaultRoute", // Default route
     login: "showLogin",
     products: "showProducts",
-    // Default route
-    "*actions": "defaultRoute",
+    cart: "showCart", // Route for the shopping cart
+    address: "showAddress", // Route for address and payment
+    "*actions": "defaultRoute", // Catch-all fallback
   },
 
   initialize: function () {
-    // Initialize controllers
-    // Ensure App.Controllers.AuthController and App.Controllers.ProductController are defined before this router is instantiated.
     this.authController = new App.Controllers.AuthController();
     this.productController = new App.Controllers.ProductController();
-    console.log(
-      "MainRouter initialized. AuthController and ProductController should be available."
-    );
+    this.cartController = new App.Controllers.CartController(); // Initialize CartController
+    console.log("Router initialized.");
   },
 
   showLogin: function () {
-    console.log("Routing to login page.");
+    $("#app-container").empty();
     this.authController.showLoginView();
   },
 
   showProducts: function () {
-    console.log("Routing to products page.");
-    // Check if user is logged in. StorageUtils needs to be available.
-    if (!StorageUtils.getUserInfo()) {
-      console.log("User not logged in, redirecting to login.");
-      Backbone.history.navigate("login", { trigger: true });
+    var userInfo = App.Utils.Storage.getUserInfo(); // Use App.Utils.Storage
+    if (!userInfo || !userInfo.accessToken) {
+      console.log("Not logged in, redirecting to login.");
+      this.navigate("login", { trigger: true });
       return;
     }
+
+    $("#app-container").empty();
     this.productController.showProductsView();
   },
 
-  defaultRoute: function (actions) {
-    console.log("Default route triggered. Actions: " + actions);
-    // Redirect to login or products based on auth status. StorageUtils needs to be available.
-    if (StorageUtils.getUserInfo()) {
-      console.log("User is logged in. Navigating to products.");
-      Backbone.history.navigate("products", { trigger: true });
+  showCart: function () {
+    var userInfo = App.Utils.Storage.getUserInfo(); // Use App.Utils.Storage
+    if (!userInfo || !userInfo.accessToken) {
+      console.log("Not logged in, redirecting to login.");
+      this.navigate("login", { trigger: true });
+      return;
+    }
+    $("#app-container").empty();
+    this.cartController.showCartView();
+  },
+
+  showAddress: function () {
+    var userInfo = App.Utils.Storage.getUserInfo(); // Use App.Utils.Storage
+    if (!userInfo || !userInfo.accessToken) {
+      console.log("Not logged in, redirecting to login.");
+      this.navigate("login", { trigger: true });
+      return;
+    }
+    // Additional check: if cart is empty, redirect to products or cart page
+    if (App.cart.getItems().length === 0) {
+      console.log("Cart is empty, redirecting to products page.");
+      App.Utils.UI.showToast(APP_STRINGS.CART_EMPTY_REDIRECT, "info");
+      this.navigate("products", { trigger: true, replace: true });
+      return;
+    }
+    $("#app-container").empty();
+    this.cartController.showAddressView();
+  },
+
+  defaultRoute: function () {
+    console.log("Default route hit.");
+    var userInfo = App.Utils.Storage.getUserInfo(); // Use App.Utils.Storage
+    if (userInfo && userInfo.accessToken) {
+      this.navigate("products", { trigger: true });
     } else {
-      console.log("User is not logged in. Navigating to login.");
-      Backbone.history.navigate("login", { trigger: true });
+      this.navigate("login", { trigger: true });
     }
   },
 });
 
-// Wait for the deviceready event before using any of Cordova's device APIs
-document.addEventListener("deviceready", onDeviceReady, false);
+// Wait for Cordova to be ready before starting app
+document.addEventListener("deviceready", function () {
+  // Ensure App.cart is initialized before router, as router might need it.
+  // App.cart is now initialized within cart-model.js itself upon its definition.
+  // So, we just need to ensure cart-model.js is loaded before app.js or router initialization.
 
-function onDeviceReady() {
-  console.log("Device is ready. Initializing Backbone application...");
-
-  // Initialize main router
   App.mainRouter = new App.Routers.MainRouter();
-  console.log("MainRouter instance created.");
-
-  // Start Backbone history
+  App.router = App.mainRouter; // Make router globally accessible for navigation
   Backbone.history.start();
-  console.log("Backbone history started.");
-
-  // The defaultRoute will be triggered by Backbone.history.start() if the current URL fragment matches a route,
-  // or if no fragment is present and a '*actions' route exists.
-  // For example, if the app starts at index.html (no hash), the '*actions' route will match.
-
-  console.log(
-    "App initialized - Running cordova-" +
-      cordova.platformId +
-      "@" +
-      cordova.version
-  );
-}
+  console.log("Backbone history started. App is ready.");
+});

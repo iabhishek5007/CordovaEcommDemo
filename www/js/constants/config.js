@@ -15,6 +15,7 @@ var APP_CONFIG = {
   STORAGE: {
     USER_INFO: "user_info",
     AUTH_TOKEN: "auth_token",
+    CART_DATA: "cart_data", // Key for storing cart items
   },
 
   // Request Timeouts (in milliseconds)
